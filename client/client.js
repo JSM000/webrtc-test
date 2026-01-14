@@ -66,15 +66,15 @@ function appendMessage(msg, className) {
 
 socket.on('user-joined', async (userId) => {
     console.log('User joined, creating offer');
-    createPeerConnection(userId);
+    const pc = createPeerConnection(userId);
 
     // Create Data Channel
-    dataChannel = rtcPeerConnection.createDataChannel("chat");
+    dataChannel = pc.createDataChannel("chat");
     setupDataChannel(dataChannel);
 
     try {
-        const offer = await rtcPeerConnection.createOffer();
-        await rtcPeerConnection.setLocalDescription(offer);
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
         socket.emit('offer', {
             type: 'offer',
             sdp: offer,
@@ -88,18 +88,18 @@ socket.on('user-joined', async (userId) => {
 
 socket.on('offer', async (payload) => {
     console.log('Offer received');
-    createPeerConnection(payload.sender);
+    const pc = createPeerConnection(payload.sender);
 
-    rtcPeerConnection.ondatachannel = (event) => {
+    pc.ondatachannel = (event) => {
         console.log('Data channel received');
         dataChannel = event.channel;
         setupDataChannel(dataChannel);
     };
 
     try {
-        await rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(payload.sdp));
-        const answer = await rtcPeerConnection.createAnswer();
-        await rtcPeerConnection.setLocalDescription(answer);
+        await pc.setRemoteDescription(new RTCSessionDescription(payload.sdp));
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
         socket.emit('answer', {
             type: 'answer',
             sdp: answer,
@@ -141,6 +141,7 @@ function createPeerConnection(targetId) {
             });
         }
     };
+    return rtcPeerConnection;
 }
 
 function setupDataChannel(channel) {

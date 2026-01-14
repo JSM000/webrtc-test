@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC Data Channel Chat</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+
+        #chat-area {
+            border: 1px solid #ccc;
+            height: 300px;
+            overflow-y: scroll;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
+        .message {
+            margin-bottom: 5px;
+        }
+
+        .my-message {
+            color: blue;
+            text-align: right;
+        }
+
+        .peer-message {
+            color: green;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>WebRTC Text Chat</h1>
+    <div id="setup">
+        <input type="text" id="room" placeholder="Enter Room Name" value="room1">
+        <button id="joinBtn">Join Room</button>
+    </div>
+    <div id="chat-container" style="display:none;">
+        <div id="chat-area"></div>
+        <input type="text" id="msgInput" placeholder="Type a message...">
+        <button id="sendBtn">Send</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+</body>
+
+</html>
